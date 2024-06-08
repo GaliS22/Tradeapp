@@ -7,40 +7,72 @@ import datetime as dt
 import functions as fc
 import json
 
-
-
+# Load Country Codes
 CountryCode = pd.read_csv(r'C:\Users\Galis\Documents\GitHub\Uncomtrade\CountryCodes.csv', encoding='latin1')
 
 st.write("UNCOMTRADE TRADE PARTNERS DASHBOARD PREVIEW")
 
-flow = st.selectbox('Trade Flow: ', ['Import','Export'])
+# Trade Flow selection
+flow = st.selectbox('Trade Flow: ', ['Import', 'Export'])
 
-report_country = st.selectbox('Reporting Country: ', CountryCode.text)
+# Map flow to the appropriate flow code
+flow_dict = {'Import': 'M', 'Export': 'X'}
+flow_code = flow_dict[flow]
 
-trade_country = st.selectbox('Trade Partner: ', CountryCode.text)
+# Reporting and Trade Partner Country selection
+report_country = st.selectbox('Reporting Country: ', CountryCode['text'])
+trade_country = st.selectbox('Trade Partner: ', CountryCode['text'])
 
-with open('HS_CODE.json', 'r') as file:
+# Load HS Codes
+with open(r'C:\Users\Galis\Documents\GitHub\Uncomtrade\HS_CODE.json', 'r') as file:
     df_hs = json.load(file)
 
 # Convert JSON data to DataFrame
 df = pd.json_normalize(df_hs)
 
-hs_code = st.multiselect('HS Code: ',df.text)
+# HS Code selection
+hs_code_desc = st.multiselect('HS Code: ', df['text'])
 
+# Convert HS code descriptions to HS codes
+hs_code = fc.find_hs(hs_code_desc)
+
+# Date range selection
 today = dt.datetime.now()
-old_year= dt.date.fromisoformat('2000-12-04').year
-jan_1= dt.date(old_year, 1,1)
-dec_31 = dt.date(today.year, 12,31)
+old_year = dt.date.fromisoformat('2015-12-04').year
+jan_1 = dt.date(old_year, 1, 1)
+dec_31 = dt.date(today.year, 12, 31)
 
-d= st.date_input( "Select range",
-    (jan_1, dt.date(today.year, 1,1)),
-    jan_1,
-    dec_31,
-    format="DD.MM.YYYY",)
+# Date input with the correct format
+d = st.date_input('Select date', jan_1)
+d_format = d.strftime('%Y%m')
 
 
-df=pd.DataFrame(un.previewFinalData(typeCode='C', freqCode='M', clCode='HS', period='202205',
-                                        reporterCode=fc.find_country_code(report_country), cmdCode='91', flowCode='M', partnerCode=fc.find_country_code(trade_country),
-                                        partner2Code=None,
-                                        customsCode=None, motCode=None, maxRecords=500, format_output='JSON',
-                                        aggregateBy=None, breakdownMode='classic', countOnly=None, includeDesc=True))
+# Get the country codes for the selected countries
+reporter_code = str(fc.find_country_code(report_country))
+partner_code = str(fc.find_country_code(trade_country))
+
+# Fetch data when the button is clicked
+if st.button('Fetch Data'):
+    try:
+        data = un.previewFinalData(
+            typeCode='C',
+            freqCode='M',
+            clCode='HS',
+            period=d_format,
+            reporterCode=reporter_code,
+            cmdCode=hs_code,
+            flowCode=flow_code,
+            partnerCode=partner_code,
+            partner2Code=None,
+            customsCode=None,
+            motCode=None,
+            maxRecords=500,
+            format_output='JSON',
+            countOnly=None,
+            includeDesc=True
+        )
+
+        # Display the fetched data
+        st.dataframe(data)
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
