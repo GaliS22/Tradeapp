@@ -1,11 +1,13 @@
 import pandas as pd
-import numpy as np
 import seaborn as sns
 import streamlit as st
 import comtradeapicall as un
 import datetime as dt
 import functions as fc
 import json
+import requests
+import matplotlib.pyplot as plt
+
 
 # Load Country Codes
 CountryCode = pd.read_csv(r'C:\Users\Galis\Documents\GitHub\Uncomtrade\CountryCodes.csv', encoding='latin1')
@@ -23,6 +25,9 @@ flow_code = flow_dict[flow]
 report_country = st.selectbox('Reporting Country: ', CountryCode['text'])
 trade_country = st.selectbox('Trade Partner: ', CountryCode['text'])
 
+reporter_code = str(fc.find_country_code(report_country))
+partner_code = str(fc.find_country_code(trade_country))
+
 # Load HS Codes
 with open(r'C:\Users\Galis\Documents\GitHub\Uncomtrade\HS_CODE.json', 'r') as file:
     df_hs = json.load(file)
@@ -30,35 +35,47 @@ with open(r'C:\Users\Galis\Documents\GitHub\Uncomtrade\HS_CODE.json', 'r') as fi
 # Convert JSON data to DataFrame
 df = pd.json_normalize(df_hs)
 
+# Year and month range selection
+today = dt.datetime.now()
+years = list(range(2010, today.year + 1))
+months = list(range(1, 13))
+
+start_year = st.selectbox('Start Year', years)
+start_month = st.selectbox('Start Month', months)
+end_year = st.selectbox('End Year', years)
+end_month = st.selectbox('End Month', months)
+
+# Combine year and month to form period
+start_period = f"{start_year}{start_month:02d}"
+end_period = f"{end_year}{end_month:02d}"
+
+periods = fc.generate_periods(start_period, end_period)
+
 # HS Code selection
-hs_code_desc = st.multiselect('HS Code: ', df['text'])
+hs_code_desc = st.multiselect('Choose Specific HS Codes or Products: ', df['text'])
+
+
+# Function to find HS codes
+def find_hs(descriptions):
+    hs_codes = []
+    for desc in descriptions:
+        if desc in df['text'].values:
+            hs_code = df.loc[df['text'] == desc, 'id'].values[0]
+            hs_codes.append(hs_code)
+    return ','.join(hs_codes) if hs_codes else ''
+
 
 # Convert HS code descriptions to HS codes
-hs_code = fc.find_hs(hs_code_desc)
+hs_code = find_hs(hs_code_desc)
 
-# Date range selection
-today = dt.datetime.now()
-old_year = dt.date.fromisoformat('2015-12-04').year
-jan_1 = dt.date(old_year, 1, 1)
-dec_31 = dt.date(today.year, 12, 31)
-
-# Date input with the correct format
-d = st.date_input('Select date', jan_1)
-d_format = d.strftime('%Y%m')
-
-
-# Get the country codes for the selected countries
-reporter_code = str(fc.find_country_code(report_country))
-partner_code = str(fc.find_country_code(trade_country))
-
-# Fetch data when the button is clicked
-if st.button('Fetch Data'):
+# Fetch and display data from UN Comtrade
+if st.button('Fetch UN Comtrade Data'):
     try:
         data = un.previewFinalData(
             typeCode='C',
             freqCode='M',
             clCode='HS',
-            period=d_format,
+            period=periods,
             reporterCode=reporter_code,
             cmdCode=hs_code,
             flowCode=flow_code,
@@ -71,8 +88,14 @@ if st.button('Fetch Data'):
             countOnly=None,
             includeDesc=True
         )
+        st.write(data)
+        df_data = pd.DataFrame(data)
+        if not df_data.empty:
+            fig, ax = plt.subplots()
+            sns.lineplot(data=df_data, x='period', y='fobvalue', ax=ax)
+            st.pyplot(fig)
 
-        # Display the fetched data
-        st.dataframe(data)
     except Exception as e:
         st.error(f"An error occurred: {e}")
+
+    

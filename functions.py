@@ -1,6 +1,7 @@
 import pandas as pd
 import json
-
+import requests
+import datetime as dt
 
 def find_country_code(country_name):
     country_code_df = pd.read_csv(r'C:\Users\Galis\Documents\GitHub\Uncomtrade\CountryCodes.csv', encoding='latin1')
@@ -21,3 +22,12 @@ def find_hs(descriptions):
     # Join the HS codes into a comma-separated string if multiple HS codes are selected
     hs_codes = ','.join(hs_codes) if hs_codes else ''
     return hs_codes
+
+def generate_periods(start, end):
+    periods = []
+    start_date = dt.datetime.strptime(start, "%Y%m")
+    end_date = dt.datetime.strptime(end, "%Y%m")
+    while start_date <= end_date:
+        periods.append(start_date.strftime("%Y%m"))
+        start_date += pd.DateOffset(months=1)
+    return ','.join(periods)
