@@ -8,11 +8,32 @@ import json
 import requests
 import matplotlib.pyplot as plt
 
-
+st.markdown(
+    """
+    <style>
+    .main {
+        background: url("https://www.czarnikow.com/wp-content/uploads/2020/12/freightliner-1182x810.png");
+        background-size: cover;
+        color: white;
+    }
+    h1 {
+        color: #FF8C00;  /* Darker orange color */
+        text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;  /* Black outline */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 # Load Country Codes
 CountryCode = pd.read_csv(r'C:\Users\Galis\Documents\GitHub\Uncomtrade\CountryCodes.csv', encoding='latin1')
 
-st.write("UNCOMTRADE TRADE PARTNERS DASHBOARD PREVIEW")
+# Custom title with darker orange color
+st.markdown(
+    """
+    <h1>UNCOMTRADE TRADE PARTNERS DATA</h1>
+    """,
+    unsafe_allow_html=True
+)
 
 # Trade Flow selection
 flow = st.selectbox('Trade Flow: ', ['Import', 'Export'])
@@ -97,5 +118,3 @@ if st.button('Fetch UN Comtrade Data'):
 
     except Exception as e:
         st.error(f"An error occurred: {e}")
-
-    
