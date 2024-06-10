@@ -24,6 +24,8 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
+
 # Load Country Codes
 CountryCode = pd.read_csv(r'C:\Users\Galis\Documents\GitHub\Uncomtrade\CountryCodes.csv', encoding='latin1')
 
@@ -34,21 +36,6 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-
-# Trade Flow selection
-flow = st.selectbox('Trade Flow: ', ['Import', 'Export'])
-
-# Map flow to the appropriate flow code
-flow_dict = {'Import': 'M', 'Export': 'X'}
-flow_code = flow_dict[flow]
-
-# Reporting and Trade Partner Country selection
-report_country = st.selectbox('Reporting Country: ', CountryCode['text'])
-trade_country = st.selectbox('Trade Partner: ', CountryCode['text'])
-
-reporter_code = str(fc.find_country_code(report_country))
-partner_code = str(fc.find_country_code(trade_country))
-
 # Load HS Codes
 with open(r'C:\Users\Galis\Documents\GitHub\Uncomtrade\HS_CODE.json', 'r') as file:
     df_hs = json.load(file)
@@ -61,14 +48,33 @@ today = dt.datetime.now()
 years = list(range(2010, today.year + 1))
 months = list(range(1, 13))
 
-start_year = st.selectbox('Start Year', years)
-start_month = st.selectbox('Start Month', months)
-end_year = st.selectbox('End Year', years)
-end_month = st.selectbox('End Month', months)
+flow = st.selectbox('Trade Flow: ', ['Import', 'Export'])
+
+col1, col2 = st.columns(2)
+
+# Trade Flow selection
+with col1:
+
+# Reporting and Trade Partner Country selection
+    report_country = st.selectbox('Reporting Country: ', CountryCode['text'])
+    start_month = st.selectbox('Start Month', months)
+    end_month = st.selectbox('End Month', months)
+
+
+with col2:
+    trade_country = st.selectbox('Trade Partner: ', CountryCode['text'])
+    start_year = st.selectbox('Start Year', years)
+    end_year = st.selectbox('End Year', years)
 
 # Combine year and month to form period
 start_period = f"{start_year}{start_month:02d}"
 end_period = f"{end_year}{end_month:02d}"
+
+# Map flow to the appropriate flow code
+flow_dict = {'Import': 'M', 'Export': 'X'}
+flow_code = flow_dict[flow]
+reporter_code = str(fc.find_country_code(report_country))
+partner_code = str(fc.find_country_code(trade_country))
 
 periods = fc.generate_periods(start_period, end_period)
 
@@ -113,7 +119,9 @@ if st.button('Fetch UN Comtrade Data'):
         df_data = pd.DataFrame(data)
         if not df_data.empty:
             fig, ax = plt.subplots()
-            sns.lineplot(data=df_data, x='period', y='fobvalue', ax=ax)
+            sns.lineplot(data=df_data, x='period', y='fobvalue', hue="cmdCode", ax=ax)
+            ax.set_title(f'{report_country} and {trade_country} -{flow}s')
+            plt.xticks(rotation=45)
             st.pyplot(fig)
 
     except Exception as e:
