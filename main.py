@@ -148,4 +148,4 @@ if st.button('Fetch UN Comtrade Data'):
             st.pyplot(fig2)
 
     except Exception as e:
-        st.error(f"An error occurred: {e}")
+        st.write(st.error(f"An error occurred: {e}"))
