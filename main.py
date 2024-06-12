@@ -39,7 +39,7 @@ CountryCode = pd.read_csv(country_code_path, encoding='latin1')
 # Custom title with color
 st.markdown(
     """
-    <h1>UNCOMTRADE TRADE PARTNERS DATA</h1>
+    <h1>UN COMTRADE TRADE PARTNERS DATA</h1>
     """,
     unsafe_allow_html=True
 )
