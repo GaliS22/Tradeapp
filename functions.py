@@ -1,18 +1,24 @@
 import pandas as pd
 import json
-import requests
 import datetime as dt
+import os
 
+# Define the base directory for relative paths
+base_dir = os.path.dirname(__file__)
+country_code_path = os.path.join(base_dir, 'data', 'CountryCodes.csv')
+hs_code_path = os.path.join(base_dir, 'data', 'HS_CODE.json')
+
+# Function to find country code
 def find_country_code(country_name):
-    country_code_df = pd.read_csv(r'C:\Users\Galis\Documents\GitHub\Uncomtrade\CountryCodes.csv', encoding='latin1')
+    country_code_df = pd.read_csv(country_code_path, encoding='latin1')
     country_code = country_code_df.loc[country_code_df['text'] == country_name, 'id'].values[0]
     return country_code
 
-
-with open(r'C:\Users\Galis\Documents\GitHub\Uncomtrade\HS_CODE.json', 'r') as file:
+# Load HS Code Data
+with open(hs_code_path, 'r') as file:
     df_hs = pd.json_normalize(json.load(file))
 
-
+# Function to find HS codes and create list
 def find_hs(descriptions):
     hs_codes = []
     for desc in descriptions:
@@ -23,6 +29,7 @@ def find_hs(descriptions):
     hs_codes = ','.join(hs_codes) if hs_codes else ''
     return hs_codes
 
+# Function to generate periods
 def generate_periods(start, end):
     periods = []
     start_date = dt.datetime.strptime(start, "%Y%m")
