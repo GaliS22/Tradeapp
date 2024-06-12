@@ -33,7 +33,8 @@ st.markdown(
 
 
 # Load Country Codes
-CountryCode = pd.read_csv(r'C:\Users\Galis\Documents\GitHub\Uncomtrade\CountryCodes.csv', encoding='latin1')
+country_code_path = os.path.join(base_dir, 'data', 'CountryCodes.csv')
+CountryCode = pd.read_csv(country_code_path, encoding='latin1')
 
 # Custom title with color
 st.markdown(
@@ -43,7 +44,8 @@ st.markdown(
     unsafe_allow_html=True
 )
 # Load HS Code Data
-with open(r'C:\Users\Galis\Documents\GitHub\Uncomtrade\HS_CODE.json', 'r') as file:
+hs_code_path = os.path.join(base_dir, 'data', 'HS_CODE.json')
+with open(hs_code_path, 'r') as file:
     df_hs = json.load(file)
 
 # Convert JSON data to DataFrame
@@ -93,18 +95,9 @@ periods = fc.generate_periods(start_period, end_period)
 # HS Code multiple selection
 hs_code_desc = st.multiselect(':orange[Choose Specific HS Codes or Products:] ', df['text'])
 
-# Function to find HS codes and create list
-def find_hs(descriptions):
-    hs_codes = []
-    for desc in descriptions:
-        if desc in df['text'].values:
-            hs_code = df.loc[df['text'] == desc, 'id'].values[0]
-            hs_codes.append(hs_code)
-    return ','.join(hs_codes) if hs_codes else ''
-
 
 # Convert HS code descriptions to HS codes
-hs_code = find_hs(hs_code_desc)
+hs_code = fc.find_hs(hs_code_desc)
 
 # Obtain from UN Comtrade API
 if st.button('Fetch UN Comtrade Data'):
