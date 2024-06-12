@@ -119,8 +119,8 @@ if st.button('Fetch UN Comtrade Data'):
         df_data = pd.DataFrame(data)
         if not df_data.empty:
             fig, ax = plt.subplots()
-            sns.lineplot(data=df_data, x='period', y='fobvalue', hue="cmdCode", ax=ax)
-            ax.set_title(f'{report_country} and {trade_country} -{flow}s')
+            sns.lineplot(data=df_data, x='period', y='fobvalue', hue="cmdDesc", ax=ax)
+            ax.set_title(f'{report_country} and {trade_country} -{flow}s of {hs_code}')
             plt.xticks(rotation=45)
             st.pyplot(fig)
 
