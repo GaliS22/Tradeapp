@@ -6,6 +6,12 @@ import datetime as dt
 import functions as fc
 import json
 import matplotlib.pyplot as plt
+import os
+
+# Define the base directory for relative paths
+base_dir = os.path.dirname(__file__)
+country_code_path = os.path.join(base_dir, 'data', 'CountryCodes.csv')
+hs_code_path = os.path.join(base_dir, 'data', 'HS_CODE.json')
 
 st.markdown(
     """
