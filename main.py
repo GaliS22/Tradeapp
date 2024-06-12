@@ -5,7 +5,6 @@ import comtradeapicall as un
 import datetime as dt
 import functions as fc
 import json
-import requests
 import matplotlib.pyplot as plt
 
 st.markdown(
@@ -30,14 +29,14 @@ st.markdown(
 # Load Country Codes
 CountryCode = pd.read_csv(r'C:\Users\Galis\Documents\GitHub\Uncomtrade\CountryCodes.csv', encoding='latin1')
 
-# Custom title with darker orange color
+# Custom title with color
 st.markdown(
     """
     <h1>UNCOMTRADE TRADE PARTNERS DATA</h1>
     """,
     unsafe_allow_html=True
 )
-# Load HS Codes
+# Load HS Code Data
 with open(r'C:\Users\Galis\Documents\GitHub\Uncomtrade\HS_CODE.json', 'r') as file:
     df_hs = json.load(file)
 
@@ -49,20 +48,23 @@ today = dt.datetime.now()
 years = list(range(2010, today.year))
 months = list(range(1, 13))
 
+# Choose Import or Export
 flow = st.selectbox(':orange[Trade Flow: ]', ['Import', 'Export'])
 
+#Design of layout
 col1, col2 = st.columns(2)
 
-# Trade Flow selection
+
 with col1:
 
-# Reporting and Trade Partner Country selection
+# col1 - Selection of reporing country start and end month
     report_country = st.selectbox(':orange[Reporting Country: ]', CountryCode['text'])
     start_month = st.selectbox(':orange[Start Month]', months)
     end_month = st.selectbox(':orange[End Month]', months)
 
 
 with col2:
+# col2 - Selection of trade country start and end year
     trade_country = st.selectbox(':orange[Trade Partner: ]', CountryCode['text'])
     start_year = st.selectbox(':orange[Start Year]', years)
     end_year = st.selectbox(':orange[End Year]', years)
@@ -74,16 +76,18 @@ end_period = f"{end_year}{end_month:02d}"
 # Map flow to the appropriate flow code
 flow_dict = {'Import': 'M', 'Export': 'X'}
 flow_code = flow_dict[flow]
+
+# Code from functions class to find country codes of selected countries
 reporter_code = str(fc.find_country_code(report_country))
 partner_code = str(fc.find_country_code(trade_country))
 
+# creating range of dates list using function from functions class
 periods = fc.generate_periods(start_period, end_period)
 
-# HS Code selection
+# HS Code multiple selection
 hs_code_desc = st.multiselect(':orange[Choose Specific HS Codes or Products:] ', df['text'])
 
-
-# Function to find HS codes
+# Function to find HS codes and create list
 def find_hs(descriptions):
     hs_codes = []
     for desc in descriptions:
@@ -96,7 +100,7 @@ def find_hs(descriptions):
 # Convert HS code descriptions to HS codes
 hs_code = find_hs(hs_code_desc)
 
-# Fetch and display data from UN Comtrade
+# Obtain from UN Comtrade API
 if st.button('Fetch UN Comtrade Data'):
     try:
         data = un.previewFinalData(
@@ -118,7 +122,9 @@ if st.button('Fetch UN Comtrade Data'):
         )
 
         df_data = pd.DataFrame(data)
+    # Subsetting the relevant data
         st.write(df_data[['period','reporterDesc','flowDesc','partnerDesc','cmdCode','fobvalue','cifvalue']].dropna())
+    # Creating Visualizations
         if not df_data.empty:
             fig, ax = plt.subplots(figsize=(12,8))
             sns.lineplot(data=df_data, x='period', y='fobvalue', hue="cmdCode", ax=ax)
