@@ -12,7 +12,7 @@ st.markdown(
     """
     <style>
     .main {
-        background: url("https://www.czarnikow.com/wp-content/uploads/2020/12/freightliner-1182x810.png");
+        background: url("https://www.shutterstock.com/image-photo/aerial-drone-photo-huge-container-600nw-1840604107.jpg");
         background-size: cover;
         color: white;
     }
@@ -20,6 +20,7 @@ st.markdown(
         color: #FF8C00;  /* Darker orange color */
         text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;  /* Black outline */
     }
+    
     </style>
     """,
     unsafe_allow_html=True
@@ -45,10 +46,10 @@ df = pd.json_normalize(df_hs)
 
 # Year and month range selection
 today = dt.datetime.now()
-years = list(range(2010, today.year + 1))
+years = list(range(2010, today.year))
 months = list(range(1, 13))
 
-flow = st.selectbox('Trade Flow: ', ['Import', 'Export'])
+flow = st.selectbox(':orange[Trade Flow: ]', ['Import', 'Export'])
 
 col1, col2 = st.columns(2)
 
@@ -56,15 +57,15 @@ col1, col2 = st.columns(2)
 with col1:
 
 # Reporting and Trade Partner Country selection
-    report_country = st.selectbox('Reporting Country: ', CountryCode['text'])
-    start_month = st.selectbox('Start Month', months)
-    end_month = st.selectbox('End Month', months)
+    report_country = st.selectbox(':orange[Reporting Country: ]', CountryCode['text'])
+    start_month = st.selectbox(':orange[Start Month]', months)
+    end_month = st.selectbox(':orange[End Month]', months)
 
 
 with col2:
-    trade_country = st.selectbox('Trade Partner: ', CountryCode['text'])
-    start_year = st.selectbox('Start Year', years)
-    end_year = st.selectbox('End Year', years)
+    trade_country = st.selectbox(':orange[Trade Partner: ]', CountryCode['text'])
+    start_year = st.selectbox(':orange[Start Year]', years)
+    end_year = st.selectbox(':orange[End Year]', years)
 
 # Combine year and month to form period
 start_period = f"{start_year}{start_month:02d}"
@@ -79,7 +80,7 @@ partner_code = str(fc.find_country_code(trade_country))
 periods = fc.generate_periods(start_period, end_period)
 
 # HS Code selection
-hs_code_desc = st.multiselect('Choose Specific HS Codes or Products: ', df['text'])
+hs_code_desc = st.multiselect(':orange[Choose Specific HS Codes or Products:] ', df['text'])
 
 
 # Function to find HS codes
@@ -115,14 +116,31 @@ if st.button('Fetch UN Comtrade Data'):
             countOnly=None,
             includeDesc=True
         )
-        st.write(data)
+
         df_data = pd.DataFrame(data)
+        st.write(df_data[['period','reporterDesc','flowDesc','partnerDesc','cmdCode','fobvalue','cifvalue']].dropna())
         if not df_data.empty:
-            fig, ax = plt.subplots()
-            sns.lineplot(data=df_data, x='period', y='fobvalue', hue="cmdDesc", ax=ax)
-            ax.set_title(f'{report_country} and {trade_country} -{flow}s of {hs_code}')
-            plt.xticks(rotation=45)
+            fig, ax = plt.subplots(figsize=(12,8))
+            sns.lineplot(data=df_data, x='period', y='fobvalue', hue="cmdCode", ax=ax)
+            ax.set_title(f'{report_country}: {trade_country} - FOB Value of {flow}s of {hs_code_desc} in US$',fontsize=18)
+            ax.set_xlabel('Time', fontsize=14)
+            ax.set_ylabel('Trade Value (excluding shipping and insurance)', fontsize=14)
+            plt.xticks(rotation=45, fontsize=14)
+
+            formatter = lambda x, _: f'{int(x):,}'
+            ax.yaxis.set_major_formatter(formatter)
+
             st.pyplot(fig)
+
+            fig2, ax2 = plt.subplots(figsize=(12, 8))
+            sns.lineplot(data=df_data, x='period', y='cifvalue', hue="cmdCode", ax=ax2)
+            ax2.set_title(f'{report_country}: {trade_country} - CIF Value of {flow}s of {hs_code_desc} in US$', fontsize=18)
+            ax2.set_xlabel('Time', fontsize=14)
+            ax2.set_ylabel('Trade Value (including taxes, shipping, and insurance)', fontsize=14)
+            plt.xticks(rotation=45, fontsize=14)
+
+            ax2.yaxis.set_major_formatter(formatter)
+            st.pyplot(fig2)
 
     except Exception as e:
         st.error(f"An error occurred: {e}")
