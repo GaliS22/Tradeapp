@@ -123,12 +123,19 @@ if st.button('Fetch UN Comtrade Data'):
         st.write(df_data[['period', 'reporterDesc', 'flowDesc', 'partnerDesc', 'cmdCode', 'fobvalue', 'cifvalue']].drop_duplicates())
         # Creating Visualizations
         if not df_data.empty:
+            # Set the dark theme
+            sns.set_theme(style="darkgrid")
+            plt.style.use('dark_background')
+
+            # Creating Visualizations
             fig, ax = plt.subplots(figsize=(12, 8))
-            sns.lineplot(data=df_data, x='period', y='fobvalue', hue="cmdCode", ax=ax)
-            ax.set_title(f'{report_country}: {trade_country} - FOB Value of {flow}s of {hs_code_desc} in US$', fontsize=18)
-            ax.set_xlabel('Time', fontsize=14)
-            ax.set_ylabel('Trade Value (excluding shipping and insurance)', fontsize=14)
-            plt.xticks(rotation=45, fontsize=14)
+            sns.lineplot(data=df_data, x='period', y='fobvalue', hue='cmdCode', ax=ax)
+            ax.set_title(f'{report_country}: {trade_country} - FOB Value of {flow}s of {hs_code_desc} in US$',
+                         fontsize=18, color='white')
+            ax.set_xlabel('Time', fontsize=14, color='white')
+            ax.set_ylabel('Trade Value (excluding shipping and insurance)', fontsize=14, color='white')
+            plt.xticks(rotation=45, fontsize=14, color='white')
+            plt.yticks(color='white')
 
             formatter = lambda x, _: f'{int(x):,}'
             ax.yaxis.set_major_formatter(formatter)
@@ -136,14 +143,15 @@ if st.button('Fetch UN Comtrade Data'):
             st.pyplot(fig)
 
             fig2, ax2 = plt.subplots(figsize=(12, 8))
-            sns.lineplot(data=df_data, x='period', y='cifvalue', hue="cmdCode", ax=ax2)
-            ax2.set_title(f'{report_country}: {trade_country} - CIF Value of {flow}s of {hs_code_desc} in US$', fontsize=18)
-            ax2.set_xlabel('Time', fontsize=14)
-            ax2.set_ylabel('Trade Value (including taxes, shipping, and insurance)', fontsize=14)
-            plt.xticks(rotation=45, fontsize=14)
+            sns.lineplot(data=df_data, x='period', y='cifvalue', hue='cmdCode', ax=ax2)
+            ax2.set_title(f'{report_country}: {trade_country} - CIF Value of {flow}s of {hs_code_desc} in US$',
+                          fontsize=18, color='white')
+            ax2.set_xlabel('Time', fontsize=14, color='white')
+            ax2.set_ylabel('Trade Value (including taxes, shipping, and insurance)', fontsize=14, color='white')
+            plt.xticks(rotation=45, fontsize=14, color='white')
+            plt.yticks(color='white')
 
             ax2.yaxis.set_major_formatter(formatter)
             st.pyplot(fig2)
-
     except Exception as e:
         st.write("The maximum number of records (500) has been reached")
