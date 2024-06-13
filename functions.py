@@ -39,15 +39,3 @@ def generate_periods(start, end):
         start_date += pd.DateOffset(months=1)
     return ','.join(periods)
 
-def generate_period_chunks(start, end, chunk_size=3):
-    periods = []
-    start_date = dt.datetime.strptime(start, "%Y%m")
-    end_date = dt.datetime.strptime(end, "%Y%m")
-    while start_date <= end_date:
-        chunk_end_date = start_date + pd.DateOffset(months=chunk_size - 1)
-        if chunk_end_date > end_date:
-            chunk_end_date = end_date
-        period_chunk = f"{start_date.strftime('%Y%m')}-{chunk_end_date.strftime('%Y%m')}"
-        periods.append(period_chunk)
-        start_date = chunk_end_date + pd.DateOffset(months=1)
-    return periods
