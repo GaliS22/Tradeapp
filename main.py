@@ -119,10 +119,14 @@ if st.button('Fetch UN Comtrade Data'):
         )
 
         df_data = pd.DataFrame(data)
-        
-        st.write(df_data[['period', 'reporterDesc', 'flowDesc', 'partnerDesc', 'cmdCode', 'fobvalue', 'cifvalue']].drop_duplicates())
+
+        if len(df_data) > 500:
+            df_data = df_data.head(500)
+            st.write("Note: Displaying only the first 500 records.")
+
         # Creating Visualizations
         if not df_data.empty:
+            st.write(df_data[['period', 'reporterDesc', 'flowDesc', 'partnerDesc', 'cmdCode', 'fobvalue', 'cifvalue']].drop_duplicates())
             # Set the dark theme
             sns.set_theme(style="darkgrid")
             plt.style.use('dark_background')
