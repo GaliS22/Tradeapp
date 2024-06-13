@@ -33,7 +33,6 @@ st.markdown(
 
 
 # Load Country Codes
-country_code_path = os.path.join(base_dir, 'data', 'CountryCodes.csv')
 CountryCode = pd.read_csv(country_code_path, encoding='latin1')
 
 # Custom title with color
@@ -44,7 +43,6 @@ st.markdown(
     unsafe_allow_html=True
 )
 # Load HS Code Data
-hs_code_path = os.path.join(base_dir, 'data', 'HS_CODE.json')
 with open(hs_code_path, 'r') as file:
     df_hs = json.load(file)
 
