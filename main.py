@@ -88,7 +88,7 @@ reporter_code = str(fc.find_country_code(report_country))
 partner_code = str(fc.find_country_code(trade_country))
 
 # creating range of dates list using function from functions class
-periods = fc.generate_periods(start_period, end_period)
+periods = fc.generate_period_chunks(start_period, end_period)
 
 # HS Code multiple selection
 hs_code_desc = st.multiselect(':orange[Choose Specific HS Codes or Products:] ', df['text'])
@@ -98,27 +98,32 @@ hs_code_desc = st.multiselect(':orange[Choose Specific HS Codes or Products:] ',
 hs_code = fc.find_hs(hs_code_desc)
 
 # Obtain from UN Comtrade API
-if st.button('Fetch UN Comtrade Data'):
-    try:
-        data = un.previewFinalData(
-            typeCode='C',
-            freqCode='M',
-            clCode='HS',
-            period=periods,
-            reporterCode=reporter_code,
-            cmdCode=hs_code,
-            flowCode=flow_code,
-            partnerCode=partner_code,
-            partner2Code=None,
-            customsCode=None,
-            motCode=None,
-            maxRecords=500,
-            format_output='JSON',
-            countOnly=None,
-            includeDesc=True
-        )
+try:
+        all_data = []
+        for period_chunk in period_chunks:
+            data = un.previewFinalData(
+                typeCode='C',
+                freqCode='M',
+                clCode='HS',
+                period=period_chunk,
+                reporterCode=reporter_code,
+                cmdCode=hs_code,
+                flowCode=flow_code,
+                partnerCode=partner_code,
+                partner2Code=None,
+                customsCode=None,
+                motCode=None,
+                maxRecords=500,
+                format_output='JSON',
+                countOnly=None,
+                includeDesc=True
+            )
+            all_data.extend(data)
+            if len(all_data) >= 500:
+                all_data = all_data[:500]
+                break
 
-        df_data = pd.DataFrame(data)
+        df_data = pd.DataFrame(all_data)
         st.write(df_data[['period', 'reporterDesc', 'flowDesc', 'partnerDesc', 'cmdCode', 'fobvalue', 'cifvalue']].drop_duplicates())
 
         # Creating Visualizations
