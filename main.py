@@ -122,7 +122,7 @@ if st.button('Fetch UN Comtrade Data'):
 
         df_data = df_data.head(499)
 
-        st.write(df_data[['period','reporterDesc','flowDesc','partnerDesc','cmdCode','fobvalue','cifvalue']])
+        st.write(df_data[['period','reporterDesc','flowDesc','partnerDesc','cmdCode','fobvalue','cifvalue']].dropna())
         #Creating Visualizations
         if not df_data.empty:
             fig, ax = plt.subplots(figsize=(12,8))
