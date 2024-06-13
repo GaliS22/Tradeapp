@@ -117,8 +117,7 @@ if st.button('Fetch UN Comtrade Data'):
             countOnly=None,
             includeDesc=True
         )
-        if len(data) > 500:
-            st.warning("The maximum number of records (500) has been reached. The data may be incomplete.")
+
         df_data = pd.DataFrame(data)
 
         st.write(df_data[['period','reporterDesc','flowDesc','partnerDesc','cmdCode','fobvalue','cifvalue']])
