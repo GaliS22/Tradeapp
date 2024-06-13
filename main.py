@@ -88,7 +88,7 @@ reporter_code = str(fc.find_country_code(report_country))
 partner_code = str(fc.find_country_code(trade_country))
 
 # creating range of dates list using function from functions class
-periods = fc.generate_period_chunks(start_period, end_period)
+period_chunks = fc.generate_period_chunks(start_period, end_period)
 
 # HS Code multiple selection
 hs_code_desc = st.multiselect(':orange[Choose Specific HS Codes or Products:] ', df['text'])
@@ -98,7 +98,8 @@ hs_code_desc = st.multiselect(':orange[Choose Specific HS Codes or Products:] ',
 hs_code = fc.find_hs(hs_code_desc)
 
 # Obtain from UN Comtrade API
-try:
+if st.button('Fetch UN Comtrade Data'):
+    try:
         all_data = []
         for period_chunk in period_chunks:
             data = un.previewFinalData(
