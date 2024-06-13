@@ -117,11 +117,13 @@ if st.button('Fetch UN Comtrade Data'):
             countOnly=None,
             includeDesc=True
         )
+        if len(data) >= 500:
+            st.warning("The maximum number of records (500) has been reached. The data may be incomplete.")
 
         df_data = pd.DataFrame(data)
-    # Subsetting the relevant data
+        # Subsetting the relevant data
         st.write(df_data[['period','reporterDesc','flowDesc','partnerDesc','cmdCode','fobvalue','cifvalue']])
-    # Creating Visualizations
+        # Creating Visualizations
         if not df_data.empty:
             fig, ax = plt.subplots(figsize=(12,8))
             sns.lineplot(data=df_data, x='period', y='fobvalue', hue="cmdCode", ax=ax)
@@ -146,4 +148,4 @@ if st.button('Fetch UN Comtrade Data'):
             st.pyplot(fig2)
 
     except Exception as e:
-        st.error(f"An error occurred: {e}")
+        st.write(f"")
