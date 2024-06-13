@@ -117,7 +117,7 @@ if st.button('Fetch UN Comtrade Data'):
             countOnly=None,
             includeDesc=True
         )
-        if len(data) >= 500:
+        if len(data) > 500:
             st.warning("The maximum number of records (500) has been reached. The data may be incomplete.")
         df_data = pd.DataFrame(data)
 
@@ -147,4 +147,4 @@ if st.button('Fetch UN Comtrade Data'):
             st.pyplot(fig2)
 
     except Exception as e:
-        st.write("The maximum number of records (500) has been reached. The data may be incomplete")
+        st.write("The maximum number of records (500) has been reached")
