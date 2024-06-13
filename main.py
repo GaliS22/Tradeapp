@@ -5,7 +5,6 @@ import comtradeapicall as un
 import datetime as dt
 import functions as fc
 import json
-import matplotlib.pyplot as plt
 import os
 
 # Define the base directory for relative paths
