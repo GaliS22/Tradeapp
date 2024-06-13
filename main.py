@@ -119,14 +119,11 @@ if st.button('Fetch UN Comtrade Data'):
         )
 
         df_data = pd.DataFrame(data)
-
-        if len(df_data) > 500:
-            df_data = df_data.head(500)
-            st.write("Note: Displaying only the first 500 records.")
+        st.write(df_data[['period', 'reporterDesc', 'flowDesc', 'partnerDesc', 'cmdCode', 'fobvalue', 'cifvalue']].drop_duplicates())
 
         # Creating Visualizations
         if not df_data.empty:
-            st.write(df_data[['period', 'reporterDesc', 'flowDesc', 'partnerDesc', 'cmdCode', 'fobvalue', 'cifvalue']].drop_duplicates())
+
             # Set the dark theme
             sns.set_theme(style="darkgrid")
             plt.style.use('dark_background')
@@ -134,8 +131,7 @@ if st.button('Fetch UN Comtrade Data'):
             # Creating Visualizations
             fig, ax = plt.subplots(figsize=(12, 8))
             sns.lineplot(data=df_data, x='period', y='fobvalue', hue='cmdCode', ax=ax)
-            ax.set_title(f'{report_country}: {trade_country} - FOB Value of {flow}s of {hs_code_desc} in US$',
-                         fontsize=18, color='white')
+            ax.set_title(f'{report_country}: {trade_country} - FOB Value of {flow}s of {hs_code_desc} in US$', fontsize=18, color='white')
             ax.set_xlabel('Time', fontsize=14, color='white')
             ax.set_ylabel('Trade Value (excluding shipping and insurance)', fontsize=14, color='white')
             plt.xticks(rotation=45, fontsize=14, color='white')
@@ -148,8 +144,7 @@ if st.button('Fetch UN Comtrade Data'):
 
             fig2, ax2 = plt.subplots(figsize=(12, 8))
             sns.lineplot(data=df_data, x='period', y='cifvalue', hue='cmdCode', ax=ax2)
-            ax2.set_title(f'{report_country}: {trade_country} - CIF Value of {flow}s of {hs_code_desc} in US$',
-                          fontsize=18, color='white')
+            ax2.set_title(f'{report_country}: {trade_country} - CIF Value of {flow}s of {hs_code_desc} in US$', fontsize=18, color='white')
             ax2.set_xlabel('Time', fontsize=14, color='white')
             ax2.set_ylabel('Trade Value (including taxes, shipping, and insurance)', fontsize=14, color='white')
             plt.xticks(rotation=45, fontsize=14, color='white')
