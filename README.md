@@ -1,6 +1,6 @@
 # Uncomtrade
 
-UN Comtrade Trade Partners Data Viewer
+UN Comtrade Trade Partners Data Viewer - Preview
 
 Overview
 The UN Comtrade Trade Partners Data Viewer is a Streamlit-based application.
@@ -29,7 +29,7 @@ Functions Class:
 Attention:
 * If product is not selected all products will appear
 * Sometimes the cif value is null or fob value is null (depends on countries and whether it is import/export)
-* This API can extract up to 500 records. If there are more an error will appear
+* This API can extract up to 500 records. If there are more an error message will appear
 
 License
 This project is licensed under the MIT License. See the LICENSE file for details.

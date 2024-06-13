@@ -116,8 +116,8 @@ if st.button('Fetch UN Comtrade Data'):
             format_output='JSON',
             countOnly=None,
             includeDesc=True
-        ).head(500)
-        
+        )
+
         df_data = pd.DataFrame(data)
         st.write(df_data[['period', 'reporterDesc', 'flowDesc', 'partnerDesc', 'cmdCode', 'fobvalue', 'cifvalue']].drop_duplicates())
 
