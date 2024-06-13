@@ -148,4 +148,4 @@ if st.button('Fetch UN Comtrade Data'):
             st.pyplot(fig2)
 
     except Exception as e:
-        st.write(f"{e}")
+        st.write("The maximum number of records (500) has been reached")
