@@ -119,6 +119,7 @@ if st.button('Fetch UN Comtrade Data'):
         )
 
         df_data = pd.DataFrame(data)
+        df_data = df_data.head(499)
 
         st.write(df_data[['period', 'reporterDesc', 'flowDesc', 'partnerDesc', 'cmdCode', 'fobvalue', 'cifvalue']].drop_duplicates())
         # Creating Visualizations
