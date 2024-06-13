@@ -121,7 +121,19 @@ if st.button('Fetch UN Comtrade Data'):
             st.warning("The maximum number of records (500) has been reached. The data may be incomplete.")
 
         df_data = pd.DataFrame(data)
-        # Subsetting the relevant data
+
+        # Print columns to diagnose the issue
+        st.write("Columns in the DataFrame:", df_data.columns.tolist())
+
+        # Check if expected columns are present
+        expected_columns = ['period', 'reporterDesc', 'flowDesc', 'partnerDesc', 'cmdCode', 'fobvalue', 'cifvalue']
+        missing_columns = [col for col in expected_columns if col not in df_data.columns]
+
+        if missing_columns:
+            st.error(f"Missing columns in the data: {missing_columns}")
+        else:
+            # Subsetting the relevant data
+            st.write(df_data[expected_columns].dropna())
         st.write(df_data[['period','reporterDesc','flowDesc','partnerDesc','cmdCode','fobvalue','cifvalue']])
         # Creating Visualizations
         if not df_data.empty:
