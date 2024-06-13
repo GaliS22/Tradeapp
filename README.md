@@ -29,7 +29,7 @@ Functions Class:
 Attention:
 * If product is not selected all products will appear
 * Sometimes the cif value is null or fob value is null (depends on countries and whether it is import/export)
-* This is API can extract up to 500 records
+* This API can extract up to 500 records. If there are more an error will appear
 
 License
 This project is licensed under the MIT License. See the LICENSE file for details.
