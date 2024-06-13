@@ -57,20 +57,20 @@ months = list(range(1, 13))
 # Choose Import or Export
 flow = st.selectbox(':orange[Trade Flow: ]', ['Import', 'Export'])
 
-#Design of layout
+# Design of layout
 col1, col2 = st.columns(2)
 
 
 with col1:
 
-# col1 - Selection of reporing country start and end month
+    # col1 - Selection of reporing country start and end month
     report_country = st.selectbox(':orange[Reporting Country: ]', CountryCode['text'])
     start_month = st.selectbox(':orange[Start Month]', months)
     end_month = st.selectbox(':orange[End Month]', months)
 
 
 with col2:
-# col2 - Selection of trade country start and end year
+    # col2 - Selection of trade country start and end year
     trade_country = st.selectbox(':orange[Trade Partner: ]', CountryCode['text'])
     start_year = st.selectbox(':orange[Start Year]', years)
     end_year = st.selectbox(':orange[End Year]', years)
@@ -120,12 +120,12 @@ if st.button('Fetch UN Comtrade Data'):
 
         df_data = pd.DataFrame(data)
 
-        st.write(df_data[['period','reporterDesc','flowDesc','partnerDesc','cmdCode','fobvalue','cifvalue']].drop_duplicates())
-        #Creating Visualizations
+        st.write(df_data[['period', 'reporterDesc', 'flowDesc', 'partnerDesc', 'cmdCode', 'fobvalue', 'cifvalue']].drop_duplicates())
+        # Creating Visualizations
         if not df_data.empty:
-            fig, ax = plt.subplots(figsize=(12,8))
+            fig, ax = plt.subplots(figsize=(12, 8))
             sns.lineplot(data=df_data, x='period', y='fobvalue', hue="cmdCode", ax=ax)
-            ax.set_title(f'{report_country}: {trade_country} - FOB Value of {flow}s of {hs_code_desc} in US$',fontsize=18)
+            ax.set_title(f'{report_country}: {trade_country} - FOB Value of {flow}s of {hs_code_desc} in US$', fontsize=18)
             ax.set_xlabel('Time', fontsize=14)
             ax.set_ylabel('Trade Value (excluding shipping and insurance)', fontsize=14)
             plt.xticks(rotation=45, fontsize=14)
