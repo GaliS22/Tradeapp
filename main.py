@@ -119,12 +119,12 @@ if st.button('Preview'):
         )
 
         df_data = pd.DataFrame(data)
-        st.write(df_data[['period', 'reporterDesc', 'flowDesc', 'partnerDesc', 'cmdCode', 'fobvalue', 'cifvalue']].drop_duplicates())
 
-        # Creating Visualizations
         if df_data.empty:
-            st.write('no data available')
+            st.write("Data not available")
         else:
+            st.write(df_data[['period', 'reporterDesc', 'flowDesc', 'partnerDesc', 'cmdCode', 'fobvalue', 'cifvalue']].drop_duplicates())
+
             # Set the dark theme
             sns.set_theme(style="darkgrid")
             plt.style.use('dark_background')
@@ -153,5 +153,6 @@ if st.button('Preview'):
 
             ax2.yaxis.set_major_formatter(formatter)
             st.pyplot(fig2)
+
     except Exception as e:
-        st.write(f'{e}')
+        st.write(f'An error occurred: {e}')
