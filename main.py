@@ -55,7 +55,7 @@ years = list(range(2010, today.year))
 months = list(range(1, 13))
 
 # Choose Import or Export
-flow = st.selectbox(':orange[Trade Flow: ]', ['Import', 'Export'])
+flow = st.selectbox('Trade Flow: ', ['Import', 'Export'])
 
 # Design of layout
 col1, col2 = st.columns(2)
@@ -91,7 +91,7 @@ partner_code = str(fc.find_country_code(trade_country))
 periods = fc.generate_periods(start_period, end_period)
 
 # HS Code multiple selection
-hs_code_desc = st.multiselect(':orange[Choose Specific HS Codes or Products:] ', df['text'])
+hs_code_desc = st.multiselect('Choose Specific HS Codes or Products: ', df['text'])
 
 
 # Convert HS code descriptions to HS codes
