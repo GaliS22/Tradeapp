@@ -122,8 +122,9 @@ if st.button('Fetch UN Comtrade Data'):
         st.write(df_data[['period', 'reporterDesc', 'flowDesc', 'partnerDesc', 'cmdCode', 'fobvalue', 'cifvalue']].drop_duplicates())
 
         # Creating Visualizations
-        if not df_data.empty:
-
+        if df_data.empty:
+            st.write('no data available')
+        else:
             # Set the dark theme
             sns.set_theme(style="darkgrid")
             plt.style.use('dark_background')
