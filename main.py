@@ -154,4 +154,4 @@ if st.button('Preview'):
             ax2.yaxis.set_major_formatter(formatter)
             st.pyplot(fig2)
     except Exception as e:
-        st.write("The maximum number of records (500) has been reached")
+        st.write(f'{e}')
