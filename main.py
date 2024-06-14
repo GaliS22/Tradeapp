@@ -98,7 +98,7 @@ hs_code_desc = st.multiselect('Choose Specific HS Codes or Products: ', df['text
 hs_code = fc.find_hs(hs_code_desc)
 
 # Obtain from UN Comtrade API
-if st.button('Fetch UN Comtrade Data'):
+if st.button('Preview'):
     try:
         data = un.previewFinalData(
             typeCode='C',
