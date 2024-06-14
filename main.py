@@ -64,16 +64,16 @@ col1, col2 = st.columns(2)
 with col1:
 
     # col1 - Selection of reporing country start and end month
-    report_country = st.selectbox(':orange[Reporting Country: ]', CountryCode['text'])
-    start_month = st.selectbox(':orange[Start Month]', months)
-    end_month = st.selectbox(':orange[End Month]', months)
+    report_country = st.selectbox('Reporting Country', CountryCode['text'])
+    start_month = st.selectbox('Start Month', months)
+    end_month = st.selectbox('End Month', months)
 
 
 with col2:
     # col2 - Selection of trade country start and end year
-    trade_country = st.selectbox(':orange[Trade Partner: ]', CountryCode['text'])
-    start_year = st.selectbox(':orange[Start Year]', years)
-    end_year = st.selectbox(':orange[End Year]', years)
+    trade_country = st.selectbox('Trade Partner: ', CountryCode['text'])
+    start_year = st.selectbox('Start Year', years)
+    end_year = st.selectbox('End Year', years)
 
 # Combine year and month to form period
 start_period = f"{start_year}{start_month:02d}"
