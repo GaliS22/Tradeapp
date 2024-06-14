@@ -55,7 +55,7 @@ years = list(range(2010, today.year))
 months = list(range(1, 13))
 
 # Choose Import or Export
-flow = st.selectbox('Trade Flow: ', ['Import', 'Export'])
+flow = st.selectbox(':white[Trade Flow: ]', ['Import', 'Export'])
 
 # Design of layout
 col1, col2 = st.columns(2)
