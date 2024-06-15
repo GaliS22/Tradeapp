@@ -11,6 +11,11 @@ It allows you to look at the trade and trade value(CIF - including shipping and 
 - Range of dates: months and years(from 2010 until 2023)
 - one or more product by search term/scroll down or HS CODE (Harmonized code 2,4, 6- a standardized numerical method of classifying traded products globally )
 
+Examples:
+1. Exports from China to USA of Vacuum Cleaners (8508) 07/2022-04-2023
+2. Imports to Israel from Colombia of Fish and Coffee (03, 090111) 03/2019-05/2019
+3. Imports to France from Morocco of Onions (0703) 08/2021-03/2022
+
 The result: Click the "Fetch UN Comtrade Data" button to fetch and display the following data.:
 - A detailed table of the trade information
 - a visualization depicting trade value in US$ of chosen products during the period of time chosen
@@ -34,8 +39,4 @@ Attention:
 License
 This project is licensed under the MIT License. See the LICENSE file for details.
 
-Examples:
-1. Exports from China to USA of Vacuum Cleaners (8508) 07/2022-04-2023
-2. Imports to Israel from Colombia of Fish and Coffee (03, 090111) 03/2019-05/2019
-3. Imports to France from Morocco of Onions (0703) 08/2021-03/2022
 
