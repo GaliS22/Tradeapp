@@ -123,7 +123,7 @@ if st.button('Preview'):
         if df_data.empty:
             st.write("Data not available")
         else:
-            st.write(df_data[['period', 'reporterDesc', 'flowDesc', 'partnerDesc', 'cmdCode', 'fobvalue', 'cifvalue']].drop_duplicates())
+            st.write(df_data.drop_duplicates())
 
             # Set the dark theme
             sns.set_theme(style="darkgrid")
