@@ -131,7 +131,7 @@ if st.button('Preview'):
 
             # Creating Visualizations
             fig, ax = plt.subplots(figsize=(12, 8))
-            sns.lineplot(data=df_data, x='period', y='fobvalue', hue='cmdCode', ax=ax)
+            sns.lineplot(data=df_data, x='period', y='primaryValue', hue='cmdCode', ax=ax)
             ax.set_title(f'{report_country}: {trade_country} - FOB Value of {flow}s of {hs_code_desc} in US$', fontsize=18, color='white')
             ax.set_xlabel('Time', fontsize=14, color='white')
             ax.set_ylabel('Trade Value (excluding shipping and insurance)', fontsize=14, color='white')
@@ -143,16 +143,6 @@ if st.button('Preview'):
 
             st.pyplot(fig)
 
-            fig2, ax2 = plt.subplots(figsize=(12, 8))
-            sns.lineplot(data=df_data, x='period', y='cifvalue', hue='cmdCode', ax=ax2)
-            ax2.set_title(f'{report_country}: {trade_country} - CIF Value of {flow}s of {hs_code_desc} in US$', fontsize=18, color='white')
-            ax2.set_xlabel('Time', fontsize=14, color='white')
-            ax2.set_ylabel('Trade Value (including taxes, shipping, and insurance)', fontsize=14, color='white')
-            plt.xticks(rotation=45, fontsize=14, color='white')
-            plt.yticks(color='white')
-
-            ax2.yaxis.set_major_formatter(formatter)
-            st.pyplot(fig2)
-
+            
     except Exception as e:
         st.write(f'An error occurred: {e}')
